@@ -32,10 +32,10 @@ Then generate the deck.
 
 ## File structure
 
-Create these files in a `presentation/` subdirectory of the current working directory (or a different location if the user specifies):
+Create files in a timestamped subdirectory under `presentation/`:
 
 ```
-presentation/
+presentation/[yyyymmdd]-[hhmm]-[slug]/
   index.html              # Shell: all CSS, design tokens, navigation JS, slide loader
   slides/
     01-title.html         # Each slide is a fragment file
@@ -44,6 +44,15 @@ presentation/
     ...
     NN-end.html
 ```
+
+Where:
+- `yyyymmdd` is the current date (e.g., `20260322`)
+- `hhmm` is the current time in 24h format (e.g., `1430`)
+- `slug` is a short kebab-case name derived from the presentation topic (e.g., `ai-marketing`, `q1-review`)
+
+Example: `presentation/20260322-1430-ai-marketing/`
+
+If the user specifies a different location, use that instead.
 
 - `index.html` : the shell that contains ALL CSS (design tokens + component styles), ALL JavaScript (navigation, slide loading, animations), and the slide container. It loads slide fragments dynamically.
 - `slides/*.html` : each file is a single slide fragment. It contains ONLY the inner content of one `<section>` element. No `<html>`, `<head>`, `<body>`, `<style>`, or `<script>` tags. Just the slide markup.
@@ -112,9 +121,9 @@ After generating the deck files, YOU must start the server. Do not ask the user 
    echo $PORT
    ```
 
-3. Start browser-sync in the background from the presentation directory:
+3. Start browser-sync in the background from the presentation directory (use the full timestamped path):
    ```bash
-   cd presentation && npx browser-sync start --server --files "index.html, slides/*.html" --no-notify --no-open --port $PORT &
+   cd presentation/[yyyymmdd]-[hhmm]-[slug] && npx browser-sync start --server --files "index.html, slides/*.html" --no-notify --no-open --port $PORT &
    ```
 
 4. Tell the user:
