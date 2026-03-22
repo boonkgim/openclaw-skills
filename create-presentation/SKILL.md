@@ -30,6 +30,13 @@ If the user provides arguments (e.g., `/create-presentation AI Marketing for Sma
 
 Then generate the deck.
 
+### Pre-generation checklist
+
+Before writing any slide files:
+1. **Read ALL source material first.** If the user references files, URLs, or documents, enumerate and read every single one before writing the first slide. Do not start generating slides with partial knowledge — this causes multiple correction rounds.
+2. Plan the full slide list (titles + types) based on everything you read.
+3. Only then start writing slide files.
+
 ## File structure
 
 Create files in a timestamped subdirectory under `presentation/`:
@@ -64,7 +71,9 @@ Files are named `NN-slug.html` where:
 - `slug` is a short descriptive kebab-case name
 - Examples: `01-title.html`, `05-key-metrics.html`, `12-end.html`
 
-The JS loader reads the manifest to determine slide order. To reorder slides, rename the number prefixes of affected files and update the manifest. To insert a slide between 03 and 04, name it `03a-new-slide.html` (alphabetical sort handles this).
+**NEVER use letter suffixes like `03a`, `07b`.** Slide filenames must be strictly sequential integers. The user sees slides numbered by position in the browser (slide 1, slide 2, ...) and the filename number must match. If you insert a slide between 03 and 04, renumber 04 and all subsequent files upward (04→05, 05→06, etc.) and update the manifest.
+
+The JS loader reads the manifest to determine slide order.
 
 ### Slide fragment format
 
@@ -82,6 +91,51 @@ Each slide file looks like this:
 The first line is an HTML comment specifying the slide type. The loader reads this and applies the corresponding CSS class to the wrapping `<section>`.
 
 Valid slide types: `title`, `content`, `two-col`, `image`, `quote`, `code`, `divider`, `stat`, `cards`, `end`
+
+**Required HTML structure per slide type:**
+
+The `two-col` type MUST use the `.columns` wrapper div. Putting `<div class="col">` directly inside the slide without the wrapper breaks the layout. Correct structure:
+
+```html
+<!-- slide-type: two-col -->
+<h2 class="animate-in">Heading</h2>
+<div class="columns animate-in">
+  <div class="col">
+    <h3>Left</h3>
+    <p>Content...</p>
+  </div>
+  <div class="col">
+    <h3>Right</h3>
+    <p>Content...</p>
+  </div>
+</div>
+```
+
+The `cards` type MUST use the `.card-grid` wrapper:
+
+```html
+<!-- slide-type: cards -->
+<h2 class="animate-in">Heading</h2>
+<div class="card-grid animate-in">
+  <div class="card">
+    <h3>Card Title</h3>
+    <p>Card content</p>
+  </div>
+  <!-- more cards... -->
+</div>
+```
+
+The `image` type MUST use the `.image-container` wrapper:
+
+```html
+<!-- slide-type: image -->
+<h2 class="animate-in">Heading</h2>
+<div class="image-container animate-in">
+  <img src="path/to/image.png" alt="Description" style="max-height: 55vh;">
+</div>
+```
+
+When placing images inside a `two-col` slide, always add `style="max-height: 55vh; width: 100%; object-fit: contain;"` on the `<img>` to prevent overflow.
 
 ## Slide loader (in index.html)
 
@@ -103,6 +157,10 @@ On page load, the JavaScript:
 
 When you add or remove a slide file, you MUST also update the manifest array in index.html.
 
+### Generation order
+
+When creating a new deck, write ALL slide files first, then update the manifest ONCE at the end. Do not update the manifest after each individual slide — this creates opportunities for the manifest to diverge from the actual files on disk.
+
 ## Starting the preview server
 
 After generating the deck files, YOU must start the server. Do not ask the user to run commands. They should only need to click a URL.
@@ -111,7 +169,7 @@ After generating the deck files, YOU must start the server. Do not ask the user 
 
 1. Check if a browser-sync process is already running for this project's presentation directory. If so, do nothing (it will auto-reload with the new files).
    ```bash
-   ps aux | grep browser-sync | grep -v grep
+   ps aux | grep "[b]rowser-sync.*presentation/[yyyymmdd]-[hhmm]-[slug]"
    ```
 
 2. If no server is running, find an available port starting from 3000:
@@ -121,19 +179,21 @@ After generating the deck files, YOU must start the server. Do not ask the user 
    echo $PORT
    ```
 
-3. Start browser-sync in the background from the presentation directory (use the full timestamped path):
+3. Start browser-sync in the background and capture its PID:
    ```bash
    cd presentation/[yyyymmdd]-[hhmm]-[slug] && npx browser-sync start --server --files "index.html, slides/*.html" --no-notify --no-open --port $PORT &
    ```
 
-4. Tell the user:
+4. **Wait for the process output to confirm the actual port.** The port browser-sync binds may differ from `$PORT` if there is a race condition. Read the exec output and extract the actual URL (e.g., `Local: http://localhost:3008`). Report THAT URL to the user, not the predicted port.
+
+5. Tell the user:
    > Your presentation is ready! Open this link to view it:
    >
-   > http://localhost:3000
+   > http://localhost:3008
    >
    > Any changes you ask me to make will appear automatically in your browser. Let me know when you are done so I can stop the preview server.
 
-   (Use the actual port number, not always 3000.)
+   (Use the actual port from the browser-sync output, not the predicted port.)
 
 ### Important server rules
 
@@ -141,9 +201,10 @@ After generating the deck files, YOU must start the server. Do not ask the user 
 - NEVER explain what browser-sync is, what ports are, or how servers work. Just give them the URL.
 - If the server fails to start (e.g., npx not found, node not installed), tell the user in plain language: "I could not start the preview. Please make sure Node.js is installed on your computer." Do not show error logs.
 - If the user closes the chat and comes back later, check if the server is still running before starting a new one.
-- When the user says they are done, stop the server:
+- When the user says they are done, stop the server by finding and killing its specific PID. Do NOT use broad `pkill -f "browser-sync"` as this kills unrelated browser-sync instances from other projects:
   ```bash
-  pkill -f "browser-sync.*--port $PORT"
+  # Find the specific PID for this presentation's server
+  ps aux | grep "[b]rowser-sync.*--port $PORT" | awk '{print $2}' | xargs kill
   ```
 
 ## index.html specification
@@ -314,21 +375,44 @@ When the user asks to change a specific slide:
 4. Browser auto-reloads
 
 When the user asks to add a slide:
-1. Create a new fragment file with the right number prefix
-2. Update the manifest in index.html
+1. Renumber all subsequent slide files upward (e.g., if inserting after 03: rename 04→05, 05→06, etc.)
+2. Create the new fragment file with the now-available number
+3. Update the manifest in index.html
+4. **Confirm to the user** (see below)
 
 When the user asks to remove a slide:
 1. Delete the fragment file
-2. Remove it from the manifest in index.html
+2. Renumber all subsequent slide files downward to close the gap
+3. Remove it from the manifest in index.html
+4. **Confirm to the user** (see below)
+
+When the user asks to replace a slide:
+1. Delete the old fragment file and create the new one in the SAME step
+2. Update the manifest if the filename changed
+3. Never leave orphaned files on disk
 
 When the user asks to reorder slides:
 1. Rename the number prefixes of affected files
 2. Update the manifest in index.html
+3. **Confirm to the user** (see below)
 
 When the user asks to restyle/rebrand:
 1. Read ONLY index.html
 2. Update the `:root` token block
 3. No slide files need to change
+
+### Confirm after structural changes
+
+After ANY add, remove, reorder, or rename operation, print the full slide list so the user can verify:
+
+> Your deck now has 12 slides:
+> 1. Title — 01-title.html
+> 2. Agenda — 02-agenda.html
+> 3. Problem — 03-problem.html
+> ...
+> 12. End — 12-end.html
+
+This prevents the user from discovering missing or misordered slides only after navigating the browser.
 
 ## Important rules
 
