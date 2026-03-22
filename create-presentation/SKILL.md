@@ -296,18 +296,29 @@ Restyling is a single edit to index.html's `:root` block. Slide files never need
 - Slide number tracked in URL hash (`#3`) to survive reload
 - Subtle slide counter bottom-right: "3 / 12"
 
-### Slide type CSS classes
+### Slide type reference
 
-1. **`.slide-title`**: large centered title, subtitle, optional author/date. Radial gradient from `--accent-glow` on background.
-2. **`.slide-content`**: heading + body text or bullets. Bullets use `--accent` colored custom markers.
-3. **`.slide-two-col`**: heading + two side-by-side columns with subtle divider.
-4. **`.slide-image`**: heading + large centered image with `--radius` and `--shadow`.
-5. **`.slide-quote`**: large centered quote with oversized `--accent` quotation mark, attribution below.
-6. **`.slide-code`**: heading + code block with `--bg-surface` background, `--accent` left border, `--font-mono`.
-7. **`.slide-divider`**: big bold centered text with `--accent` underline.
-8. **`.slide-stat`**: large number in `--accent`, label below.
-9. **`.slide-cards`**: heading + 2-4 cards in a grid with `--bg-surface`, `--border`, `--radius`, `--shadow`.
-10. **`.slide-end`**: closing slide with contact info.
+When planning which slide type to use, match the content to the type that presents it best:
+
+| Type | CSS class | Layout | Best for |
+|------|-----------|--------|----------|
+| **title** | `.slide-title` | Large centered title, subtitle, author/date. Radial accent glow. | Opening slide. One per deck. |
+| **content** | `.slide-content` | Heading + bullet list or body paragraphs. | Explanations, agendas, key points, processes — the workhorse slide. Use when content is a single list or narrative. |
+| **two-col** | `.slide-two-col` | Heading + two side-by-side columns with subtle divider. | Comparisons (before/after, pros/cons), pairing an image with text, showing two related but distinct ideas side by side. |
+| **image** | `.slide-image` | Heading + large centered image. | Screenshots, photos, diagrams, mockups — when the visual IS the point. |
+| **quote** | `.slide-quote` | Large centered quote with oversized accent quotation mark, attribution below. | Customer testimonials, expert endorsements, memorable one-liners. Great for breaking up dense sections with an emotional beat. |
+| **code** | `.slide-code` | Heading + syntax-highlighted code block. | Code snippets, config examples, API responses, CLI output. Technical audiences only. |
+| **divider** | `.slide-divider` | Big bold centered text with accent underline. | Section breaks between major topics. Use to signal "we're moving on" — keeps the audience oriented in longer decks. |
+| **stat** | `.slide-stat` | Giant accent-colored number, label, optional description. | One dramatic metric — revenue, growth %, user count, time saved. Maximum impact when the number is surprising. |
+| **cards** | `.slide-cards` | Heading + 2-4 cards in a grid. | Features, pillars, team members, options, categories — when you have 2-4 parallel items of equal weight. Use `cols-3` class on `.card-grid` for 3 cards. |
+| **end** | `.slide-end` | Centered title, subtitle, contact info. Radial accent glow. | Closing slide. One per deck. "Thank You" / "Questions?" / contact details. |
+
+**Selection tips:**
+- **5+ bullet points?** Split across two `content` slides or switch to `cards` if items are parallel.
+- **Comparing two things?** Use `two-col`, not two separate `content` slides.
+- **One big number to land?** Use `stat`, not a `content` slide with the number buried in bullets.
+- **Transitioning between major sections?** Insert a `divider` — it gives the audience a mental reset.
+- **Showing a screenshot or mockup?** Use `image`, or `two-col` if you need annotation text beside it.
 
 ### Visual polish (built into default CSS)
 
