@@ -238,13 +238,13 @@ ALL visual styling must flow through CSS custom properties in `:root`. This allo
   --font-body: system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
 
-  --text-xs: clamp(0.75rem, 1vw, 0.875rem);
-  --text-sm: clamp(0.875rem, 1.2vw, 1rem);
-  --text-base: clamp(1rem, 1.5vw, 1.25rem);
-  --text-lg: clamp(1.25rem, 2vw, 1.75rem);
-  --text-xl: clamp(1.75rem, 2.5vw, 2.25rem);
-  --text-2xl: clamp(2.25rem, 3.5vw, 3.25rem);
-  --text-3xl: clamp(3rem, 5vw, 4.5rem);
+  --text-xs: 14px;
+  --text-sm: 16px;
+  --text-base: 20px;
+  --text-lg: 28px;
+  --text-xl: 36px;
+  --text-2xl: 52px;
+  --text-3xl: 72px;
 
   /* Spacing */
   --space-xs: 0.5rem;
@@ -279,9 +279,10 @@ Restyling is a single edit to index.html's `:root` block. Slide files never need
 
 ### Viewport and dimensions
 
-- 16:9 aspect ratio (1920x1080 logical pixels)
-- `<meta name="viewport" content="width=1920">`
-- Each slide `<section>` is `100vw` x `100vh`
+- Fixed 1920×1080 canvas (16:9), scaled via CSS `transform: scale()` to fit any screen
+- `<meta name="viewport" content="width=device-width, initial-scale=1">`
+- Each slide `<section>` is `1920px` x `1080px` — the JS `scaleSlides()` function handles fitting
+- Letterboxing (black bars) fills remaining space on non-16:9 screens
 - Only one slide visible at a time
 
 ### Keyboard navigation

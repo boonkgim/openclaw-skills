@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=1920">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Presentation</title>
   <style>
     /* ================================================================
@@ -30,13 +30,13 @@
       --font-body: system-ui, -apple-system, 'Segoe UI', sans-serif;
       --font-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
 
-      --text-xs: clamp(0.75rem, 1vw, 0.875rem);
-      --text-sm: clamp(0.875rem, 1.2vw, 1rem);
-      --text-base: clamp(1rem, 1.5vw, 1.25rem);
-      --text-lg: clamp(1.25rem, 2vw, 1.75rem);
-      --text-xl: clamp(1.75rem, 2.5vw, 2.25rem);
-      --text-2xl: clamp(2.25rem, 3.5vw, 3.25rem);
-      --text-3xl: clamp(3rem, 5vw, 4.5rem);
+      --text-xs: 14px;
+      --text-sm: 16px;
+      --text-base: 20px;
+      --text-lg: 28px;
+      --text-xl: 36px;
+      --text-2xl: 52px;
+      --text-3xl: 72px;
 
       /* Spacing */
       --space-xs: 0.5rem;
@@ -53,6 +53,10 @@
 
       /* Slide */
       --slide-padding: var(--space-xl) var(--space-xl);
+
+      /* Canvas (used by JS for scaling) */
+      --slide-width: 1920;
+      --slide-height: 1080;
     }
 
     /* ================================================================
@@ -64,7 +68,7 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: var(--bg-primary);
+      background: #000;
       color: var(--text-primary);
       font-family: var(--font-body);
       font-size: var(--text-base);
@@ -73,19 +77,21 @@
     }
 
     /* ================================================================
-       SLIDE CONTAINER
+       SLIDE CONTAINER — fixed 1920×1080 canvas, scaled by JS
        ================================================================ */
     #slide-container {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
+      position: absolute;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      transform-origin: 0 0;
     }
 
     .slide {
       position: absolute;
       top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 1920px;
+      height: 1080px;
       padding: var(--slide-padding);
       display: none;
       flex-direction: column;
@@ -267,7 +273,7 @@
        ================================================================ */
     .slide img {
       max-width: 100%;
-      max-height: 65vh;
+      max-height: 702px;
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       object-fit: contain;
@@ -423,7 +429,7 @@
 
     .slide-code pre {
       font-size: var(--text-base);
-      max-height: 60vh;
+      max-height: 648px;
     }
 
     /* Syntax coloring helpers */
@@ -545,7 +551,7 @@
        PROGRESS BAR
        ================================================================ */
     .progress-bar {
-      position: fixed;
+      position: absolute;
       top: 0;
       left: 0;
       height: 3px;
@@ -558,7 +564,7 @@
        SLIDE COUNTER
        ================================================================ */
     .slide-counter {
-      position: fixed;
+      position: absolute;
       bottom: var(--space-md);
       right: var(--space-md);
       font-size: var(--text-sm);
@@ -579,13 +585,16 @@
 
       html, body {
         overflow: visible;
+        background: none;
         width: 13.333in;
       }
 
       #slide-container {
-        position: static;
-        width: 13.333in;
-        height: auto;
+        position: static !important;
+        width: 13.333in !important;
+        height: auto !important;
+        transform: none !important;
+        overflow: visible !important;
       }
 
       .slide {
@@ -643,14 +652,14 @@
 </head>
 <body>
 
-  <!-- Progress bar -->
-  <div class="progress-bar" id="progress-bar"></div>
+  <!-- Slide viewport: fixed 1920×1080 canvas, scaled by JS to fit any screen -->
+  <div id="slide-container">
+    <!-- Progress bar -->
+    <div class="progress-bar" id="progress-bar"></div>
 
-  <!-- Slide counter -->
-  <div class="slide-counter" id="slide-counter"></div>
-
-  <!-- Slides render here -->
-  <div id="slide-container"></div>
+    <!-- Slide counter -->
+    <div class="slide-counter" id="slide-counter"></div>
+  </div>
 
   <!-- ============================================================
        SLIDE MANIFEST — list all slide files in order
@@ -661,9 +670,27 @@
 
   <script>
     (function () {
+      /* ── Constants ── */
+      var SLIDE_W = 1920;
+      var SLIDE_H = 1080;
+
       /* ── State ── */
       let current = 0;
       let slides = [];
+
+      /* ── Scale container to fit viewport while preserving 16:9 ── */
+      function scaleSlides() {
+        var container = document.getElementById('slide-container');
+        var scaleX = window.innerWidth / SLIDE_W;
+        var scaleY = window.innerHeight / SLIDE_H;
+        var scale = Math.min(scaleX, scaleY);
+        var offsetX = (window.innerWidth - SLIDE_W * scale) / 2;
+        var offsetY = (window.innerHeight - SLIDE_H * scale) / 2;
+        container.style.transform = 'translate(' + offsetX + 'px,' + offsetY + 'px) scale(' + scale + ')';
+      }
+
+      window.addEventListener('resize', scaleSlides);
+      scaleSlides();
 
       /* ── Load slides from manifest ── */
       async function loadSlides() {
