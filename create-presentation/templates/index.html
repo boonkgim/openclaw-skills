@@ -30,13 +30,13 @@
       --font-body: system-ui, -apple-system, 'Segoe UI', sans-serif;
       --font-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
 
-      --text-xs: 14px;
-      --text-sm: 16px;
-      --text-base: 20px;
-      --text-lg: 28px;
-      --text-xl: 36px;
-      --text-2xl: 52px;
-      --text-3xl: 72px;
+      --text-xs: 16px;
+      --text-sm: 20px;
+      --text-base: 24px;
+      --text-lg: 32px;
+      --text-xl: 42px;
+      --text-2xl: 58px;
+      --text-3xl: 80px;
 
       /* Spacing */
       --space-xs: 0.5rem;
@@ -68,7 +68,7 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: #000;
+      background: #eef0f4;
       color: var(--text-primary);
       font-family: var(--font-body);
       font-size: var(--text-base);
@@ -85,6 +85,8 @@
       height: 1080px;
       overflow: hidden;
       transform-origin: 0 0;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15), 0 1px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
     }
 
     .slide {
@@ -679,10 +681,14 @@
       let slides = [];
 
       /* ── Scale container to fit viewport while preserving 16:9 ── */
+      var MARGIN_Y = 40; /* px margin top & bottom */
+
       function scaleSlides() {
         var container = document.getElementById('slide-container');
-        var scaleX = window.innerWidth / SLIDE_W;
-        var scaleY = window.innerHeight / SLIDE_H;
+        var availW = window.innerWidth;
+        var availH = window.innerHeight - MARGIN_Y * 2;
+        var scaleX = availW / SLIDE_W;
+        var scaleY = availH / SLIDE_H;
         var scale = Math.min(scaleX, scaleY);
         var offsetX = (window.innerWidth - SLIDE_W * scale) / 2;
         var offsetY = (window.innerHeight - SLIDE_H * scale) / 2;
