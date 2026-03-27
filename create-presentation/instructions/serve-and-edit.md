@@ -2,23 +2,19 @@
 
 ## Start the preview server
 
-Run this command (replace `<SCAFFOLD_DIR>` with the path from scaffold.sh):
+Run from the skill directory (the directory containing SKILL.md):
 
-```bash
-bash ${CLAUDE_SKILL_DIR}/scripts/serve.sh "<SCAFFOLD_DIR>"
+```
+node scripts/serve.mjs "<SCAFFOLD_DIR>"
 ```
 
-The script outputs `SERVER_PID` and `SERVER_URL`. Tell the user:
+The script outputs `SERVER_PID` and `SERVER_URL`. Tell the user the URL.
 
-> Your presentation is ready! Open this link to view it:
->
-> http://localhost:PORT
->
-> Any changes will appear automatically. Let me know when you're done so I can stop the server.
+To stop: `kill <SERVER_PID>` (Mac/Linux) or close the process (Windows).
 
 ## Editing slides
 
-- **Change a slide:** Edit just that file in `slides/`. Browser auto-reloads.
+- **Change a slide:** Edit just that file in `slides/`. Refresh browser to see changes.
 - **Add a slide:** Create the file, then add it to the manifest in `index.html`.
 - **Remove a slide:** Delete the file, then remove it from the manifest.
 - **Restyle/rebrand:** Edit ONLY the `:root` CSS variables block at the top of `index.html`. Change colors, fonts, sizes there. Slide files never need changing for a restyle.
@@ -37,19 +33,4 @@ No slide files need editing — everything flows through the variables.
 
 ## PDF export
 
-When the user asks to export as PDF:
-
-```bash
-cd ${CLAUDE_SKILL_DIR}/scripts && npm ls puppeteer 2>/dev/null || npm install puppeteer
-cd ${CLAUDE_SKILL_DIR}/scripts && node export-pdf.mjs <SERVER_URL> "<output.pdf>"
-```
-
-For selectable text mode, add `--text` flag.
-
-## Stopping the server
-
-When the user is done, kill the server by its PID (from `serve.sh` output):
-
-```bash
-kill <SERVER_PID>
-```
+Press `P` in the browser or use File > Print. The slides are print-ready (one slide per page, 16:9).

@@ -8,6 +8,11 @@ description: Create and live-edit presentation slide decks as multi-file HTML wi
 This skill uses pre-built HTML slide templates with `{{PLACEHOLDER}}` markers.
 Your job is simple: copy the template, read source material, replace placeholders, start the server.
 
+**Skill directory:** This SKILL.md file is in the skill directory. The scripts and templates are next to it:
+- `scripts/scaffold.mjs` — copies templates to a new presentation folder
+- `scripts/serve.mjs` — starts a local preview server
+- `templates/` — the slide templates with placeholders
+
 ## Step 1: Gather info
 
 Ask the user (skip any already provided in their message):
@@ -18,8 +23,10 @@ Ask the user (skip any already provided in their message):
 
 ## Step 2: Copy the template
 
-```bash
-bash ${CLAUDE_SKILL_DIR}/scripts/scaffold.sh "<slug>"
+Run from the skill directory (the directory containing this SKILL.md):
+
+```
+node scripts/scaffold.mjs "<slug>"
 ```
 
 Where `<slug>` is a short kebab-case name (e.g., `marketing-plan`). Save the `SCAFFOLD_DIR` path from the output.
@@ -69,16 +76,23 @@ Example — if you deleted `11-highlight.html`:
 
 ## Step 5: Start the preview server
 
-```bash
-bash ${CLAUDE_SKILL_DIR}/scripts/serve.sh "${SCAFFOLD_DIR}"
+Run from the skill directory:
+
+```
+node scripts/serve.mjs "${SCAFFOLD_DIR}"
 ```
 
-Tell the user the URL. Changes auto-reload.
+This starts a local HTTP server (no dependencies needed). Tell the user the URL from the output.
 
-## Later: Editing, restyling, PDF export
+To stop: `kill <SERVER_PID>` (Mac/Linux) or close the process (Windows).
 
-When the user asks to edit slides, restyle, or export PDF, read `${CLAUDE_SKILL_DIR}/instructions/serve-and-edit.md` for instructions.
+## Later: Editing and restyling
 
-## Stopping the server
+- **Change a slide:** Edit the file in `slides/`. Refresh the browser to see changes.
+- **Add a slide:** Create the file, add it to the manifest array in `index.html`.
+- **Remove a slide:** Delete the file, remove from the manifest.
+- **Restyle/rebrand:** Edit the `:root` CSS variables in `index.html`. No slide files need changing.
 
-When done: `kill <SERVER_PID>`
+## PDF export
+
+Press `P` in the browser or use File > Print. The slides are print-ready (one slide per page, 16:9).
