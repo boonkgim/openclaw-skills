@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Presentation</title>
+  <style>
+    /* ================================================================
+       THEME TOKENS — edit these to restyle the entire deck
+       ================================================================ */
+    :root {
+      /* Backgrounds */
+      --bg-primary: #0f0f1a;
+      --bg-secondary: #1a1a2e;
+      --bg-surface: rgba(255, 255, 255, 0.04);
+      --bg-surface-hover: rgba(255, 255, 255, 0.08);
+
+      /* Text */
+      --text-primary: #ffffff;
+      --text-secondary: #b0b0c0;
+      --text-muted: #6a6a80;
+
+      /* Accent */
+      --accent: #4fc3f7;
+      --accent-soft: rgba(79, 195, 247, 0.15);
+      --accent-glow: rgba(79, 195, 247, 0.3);
+
+      /* Typography */
+      --font-heading: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      --font-body: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      --font-mono: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+
+      --text-xs: 16px;
+      --text-sm: 20px;
+      --text-base: 24px;
+      --text-lg: 32px;
+      --text-xl: 42px;
+      --text-2xl: 58px;
+      --text-3xl: 80px;
+
+      /* Spacing */
+      --space-xs: 0.5rem;
+      --space-sm: 1rem;
+      --space-md: 2rem;
+      --space-lg: 3rem;
+      --space-xl: 5rem;
+
+      /* Effects */
+      --radius: 12px;
+      --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+      --border: 1px solid rgba(255, 255, 255, 0.08);
+      --transition: 200ms ease;
+
+      /* Slide */
+      --slide-padding: var(--space-xl) var(--space-xl);
+    }
+
+    /* ================================================================
+       RESET & BASE
+       ================================================================ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #eef0f4;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ================================================================
+       SLIDE CONTAINER — fixed 1920x1080 canvas, scaled by JS
+       ================================================================ */
+    #slide-container {
+      position: absolute;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      transform-origin: 0 0;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15), 0 1px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
+    }
+
+    .slide {
+      position: absolute;
+      top: 0; left: 0;
+      width: 1920px;
+      height: 1080px;
+      padding: var(--slide-padding);
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    .slide.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    /* Dot pattern overlay */
+    .slide::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .slide > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ================================================================
+       TYPOGRAPHY
+       ================================================================ */
+    h1 {
+      font-family: var(--font-heading);
+      font-size: var(--text-3xl);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      line-height: 1.15;
+    }
+
+    h2 {
+      font-family: var(--font-heading);
+      font-size: var(--text-2xl);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      margin-bottom: var(--space-lg);
+      line-height: 1.2;
+    }
+
+    h3 {
+      font-family: var(--font-heading);
+      font-size: var(--text-xl);
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: var(--space-sm);
+      line-height: 1.3;
+    }
+
+    p {
+      font-size: var(--text-lg);
+      color: var(--text-secondary);
+      max-width: 60ch;
+      line-height: 1.7;
+    }
+
+    /* ================================================================
+       LISTS
+       ================================================================ */
+    ul, ol {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    ul li {
+      font-size: var(--text-lg);
+      color: var(--text-secondary);
+      padding-left: var(--space-md);
+      position: relative;
+      line-height: 1.6;
+    }
+
+    ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.65em;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    ol {
+      counter-reset: ol-counter;
+    }
+
+    ol li {
+      font-size: var(--text-lg);
+      color: var(--text-secondary);
+      padding-left: var(--space-lg);
+      position: relative;
+      counter-increment: ol-counter;
+      line-height: 1.6;
+    }
+
+    ol li::before {
+      content: counter(ol-counter);
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-size: var(--text-lg);
+      font-weight: 700;
+      color: var(--accent);
+      width: 1.5em;
+      text-align: center;
+    }
+
+    /* ================================================================
+       IMAGES
+       ================================================================ */
+    .slide img {
+      max-width: 100%;
+      max-height: 702px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      object-fit: contain;
+    }
+
+    /* ================================================================
+       CARDS
+       ================================================================ */
+    .card {
+      background: var(--bg-surface);
+      border: var(--border);
+      border-radius: var(--radius);
+      padding: var(--space-md);
+      box-shadow: var(--shadow);
+      transition: background var(--transition);
+    }
+
+    .card:hover {
+      background: var(--bg-surface-hover);
+    }
+
+    .card h3 {
+      font-size: var(--text-lg);
+      margin-bottom: var(--space-xs);
+    }
+
+    .card p {
+      font-size: var(--text-base);
+      color: var(--text-secondary);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-md);
+      width: 100%;
+    }
+
+    /* ================================================================
+       SLIDE TYPE: TITLE
+       ================================================================ */
+    .slide-title {
+      align-items: center;
+      text-align: center;
+      justify-content: center;
+      background:
+        radial-gradient(ellipse at 50% 50%, var(--accent-glow) 0%, transparent 60%),
+        linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    }
+
+    .slide-title h1 { margin-bottom: var(--space-sm); }
+    .slide-title .subtitle { font-size: var(--text-xl); color: var(--text-secondary); margin-bottom: var(--space-lg); }
+    .slide-title .author { font-size: var(--text-base); color: var(--text-muted); }
+
+    /* ================================================================
+       SLIDE TYPE: CONTENT
+       ================================================================ */
+    .slide-content {
+      justify-content: center;
+    }
+
+    /* ================================================================
+       SLIDE TYPE: TWO COLUMNS
+       ================================================================ */
+    .slide-two-col {
+      justify-content: center;
+    }
+
+    .columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-lg);
+      width: 100%;
+    }
+
+    .columns .col {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .columns .col + .col {
+      border-left: var(--border);
+      padding-left: var(--space-lg);
+    }
+
+    /* ================================================================
+       SLIDE TYPE: IMAGE
+       ================================================================ */
+    .slide-image { align-items: center; }
+    .slide-image .image-container { display: flex; justify-content: center; align-items: center; flex: 1; width: 100%; }
+
+    /* ================================================================
+       SLIDE TYPE: STAT
+       ================================================================ */
+    .slide-stat {
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 8rem;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -0.03em;
+      line-height: 1;
+      text-shadow: 0 0 40px var(--accent-glow);
+    }
+
+    .stat-label { font-size: var(--text-xl); color: var(--text-secondary); margin-top: var(--space-sm); }
+    .stat-description { font-size: var(--text-base); color: var(--text-muted); margin-top: var(--space-xs); max-width: 40ch; }
+
+    /* ================================================================
+       SLIDE TYPE: CARDS
+       ================================================================ */
+    .slide-cards { justify-content: center; }
+
+    /* ================================================================
+       SLIDE TYPE: END
+       ================================================================ */
+    .slide-end {
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background:
+        radial-gradient(ellipse at 50% 50%, var(--accent-glow) 0%, transparent 60%),
+        linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    }
+
+    .slide-end h1 { margin-bottom: var(--space-md); }
+    .slide-end .contact { font-size: var(--text-lg); color: var(--text-muted); }
+    .slide-end .contact a { color: var(--accent); text-decoration: none; }
+
+    /* ================================================================
+       ANIMATIONS
+       ================================================================ */
+    .slide.active { animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* ================================================================
+       PROGRESS BAR & COUNTER
+       ================================================================ */
+    .progress-bar {
+      position: absolute; top: 0; left: 0;
+      height: 3px; background: var(--accent);
+      z-index: 100; transition: width var(--transition);
+    }
+
+    .slide-counter {
+      position: absolute; bottom: var(--space-md); right: var(--space-md);
+      font-size: var(--text-sm); color: var(--text-muted);
+      font-family: var(--font-mono); z-index: 100; user-select: none;
+    }
+
+    /* ================================================================
+       PRINT / PDF EXPORT
+       ================================================================ */
+    @media print {
+      @page { size: 13.333in 7.5in; margin: 0; }
+      html, body { overflow: visible; background: none; width: 13.333in; }
+      #slide-container { position: static !important; width: 13.333in !important; height: auto !important; transform: none !important; overflow: visible !important; }
+      .slide { position: relative !important; display: flex !important; opacity: 1 !important; page-break-after: always; page-break-inside: avoid; width: 13.333in !important; height: 7.5in !important; break-after: page; }
+      .progress-bar, .slide-counter { display: none !important; }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      * { box-shadow: none !important; text-shadow: none !important; filter: none !important; backdrop-filter: none !important; }
+      .card { border: 1px solid rgba(0, 0, 0, 0.12) !important; }
+      .slide::before { display: none !important; }
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .animate-in { opacity: 1 !important; transform: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="slide-container">
+    <div class="progress-bar" id="progress-bar"></div>
+    <div class="slide-counter" id="slide-counter"></div>
+
+    <!-- ============================================================
+         SLIDES — Edit the {{PLACEHOLDER}} text below.
+         To remove a slide, delete the entire <section>...</section> block.
+         To add a slide, copy a <section> block and change its content.
+         ============================================================ -->
+
+    <!-- SLIDE 1: Title -->
+    <section class="slide slide-title">
+      <h1 class="animate-in">{{TITLE}}</h1>
+      <p class="subtitle animate-in">{{SUBTITLE}}</p>
+      <p class="author animate-in">{{AUTHOR}} &middot; {{DATE}}</p>
+    </section>
+
+    <!-- SLIDE 2: Overview / Executive Summary -->
+    <section class="slide slide-content">
+      <h2 class="animate-in">{{HEADING}}</h2>
+      <ul>
+        <li class="animate-in">{{BULLET_1}}</li>
+        <li class="animate-in">{{BULLET_2}}</li>
+        <li class="animate-in">{{BULLET_3}}</li>
+        <li class="animate-in">{{BULLET_4}}</li>
+      </ul>
+    </section>
+
+    <!-- SLIDE 3: Objectives / Goals (numbered) -->
+    <section class="slide slide-content">
+      <h2 class="animate-in">{{HEADING}}</h2>
+      <ol>
+        <li class="animate-in">{{ITEM_1}}</li>
+        <li class="animate-in">{{ITEM_2}}</li>
+        <li class="animate-in">{{ITEM_3}}</li>
+      </ol>
+    </section>
+
+    <!-- SLIDE 4: Profile / Audience (two columns) -->
+    <section class="slide slide-two-col">
+      <h2 class="animate-in">{{HEADING}}</h2>
+      <div class="columns animate-in">
+        <div class="col">
+          <h3>{{LEFT_TITLE}}</h3>
+          <ul>
+            <li>{{LEFT_1}}</li>
+            <li>{{LEFT_2}}</li>
+            <li>{{LEFT_3}}</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>{{RIGHT_TITLE}}</h3>
+          <ul>
+            <li>{{RIGHT_1}}</li>
+            <li>{{RIGHT_2}}</li>
+            <li>{{RIGHT_3}}</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: Strategy / Approach (two columns) -->
+    <section class="slide slide-two-col">
+      <h2 class="animate-in">{{HEADING}}</h2>
+      <div class="columns animate-in">
+        <div class="col">
+          <h3>{{LEFT_TITLE}}</h3>
+          <p>{{LEFT_DESC}}</p>
+          <ul>
+            <li>{{LEFT_1}}</li>
+            <li>{{LEFT_2}}</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>{{RIGHT_TITLE}}</h3>
+          <p>{{RIGHT_DESC}}</p>
+          <ul>
+            <li>{{RIGHT_1}}</li>
+            <li>{{RIGHT_2}}</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: Grid / Categories (2x2 cards) -->
+    <section class="slide slide-cards">
+      <h2 class="animate-in">{{HEADING}}</h2>
+      <div class="card-grid animate-in">
+        <div class="card">
+          <h3>{{CARD_1_TITLE}}</h3>
+          <p>{{CARD_1_DESC}}</p>
+        </div>
+        <div class="card">
+          <h3>{{CARD_2_TITLE}}</h3>
+          <p>{{CARD_2_DESC}}</p>
+        </div>
+        <div class="card">
+          <h3>{{CARD_3_TITLE}}</h3>
+          <p>{{CARD_3_DESC}}</p>
+        </div>
+        <div class="card">
+          <h3>{{CARD_4_TITLE}}</h3>
+          <p>{{CARD_4_DESC}}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: Creative / Image + Text (two columns) -->
+    <section class="slide slide-two-col">
+      <h2 class="animate-in">{{HEADING}}</h2>
+      <div class="columns animate-in">
+        <div class="col">
+          <div class="image-container">
+            <img src="{{IMAGE_PATH}}" alt="{{IMAGE_ALT}}">
+          </div>
+        </div>
+        <div class="col">
+          <h3>{{RIGHT_TITLE}}</h3>
+          <p>{{RIGHT_DESC}}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: Timeline / Roadmap (two columns) -->
+    <section class="slide slide-two-col">
+      <h2 class="animate-in">{{HEADING}}</h2>
+      <div class="columns animate-in">
+        <div class="col">
+          <h3>{{PHASE_1_TITLE}}</h3>
+          <ul>
+            <li>{{PHASE_1_ACTION_1}}</li>
+            <li>{{PHASE_1_ACTION_2}}</li>
+          </ul>
+          <h3>{{PHASE_2_TITLE}}</h3>
+          <ul>
+            <li>{{PHASE_2_ACTION_1}}</li>
+            <li>{{PHASE_2_ACTION_2}}</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>{{PHASE_3_TITLE}}</h3>
+          <ul>
+            <li>{{PHASE_3_ACTION_1}}</li>
+            <li>{{PHASE_3_ACTION_2}}</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 9: Metrics / KPIs -->
+    <section class="slide slide-content">
+      <h2 class="animate-in">{{HEADING}}</h2>
+      <ul>
+        <li class="animate-in">{{METRIC_1}}</li>
+        <li class="animate-in">{{METRIC_2}}</li>
+        <li class="animate-in">{{METRIC_3}}</li>
+        <li class="animate-in">{{METRIC_4}}</li>
+      </ul>
+    </section>
+
+    <!-- SLIDE 10: Model / Comparison (two columns) -->
+    <section class="slide slide-two-col">
+      <h2 class="animate-in">{{HEADING}}</h2>
+      <div class="columns animate-in">
+        <div class="col">
+          <h3>{{LEFT_TITLE}}</h3>
+          <ul>
+            <li>{{LEFT_1}}</li>
+            <li>{{LEFT_2}}</li>
+            <li>{{LEFT_3}}</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>{{RIGHT_TITLE}}</h3>
+          <ul>
+            <li>{{RIGHT_1}}</li>
+            <li>{{RIGHT_2}}</li>
+            <li>{{RIGHT_3}}</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 11: Highlight / Big Number -->
+    <section class="slide slide-stat">
+      <h2 class="animate-in">{{HEADING}}</h2>
+      <div class="stat-number animate-in">{{NUMBER}}</div>
+      <div class="stat-label animate-in">{{LABEL}}</div>
+      <p class="stat-description animate-in">{{DESCRIPTION}}</p>
+    </section>
+
+    <!-- SLIDE 12: Closing -->
+    <section class="slide slide-end">
+      <h1 class="animate-in">{{CLOSING}}</h1>
+      <p class="subtitle animate-in">{{CLOSING_SUBTITLE}}</p>
+      <div class="contact animate-in">
+        <p>{{CONTACT}}</p>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    (function () {
+      var SLIDE_W = 1920, SLIDE_H = 1080, MARGIN_Y = 40;
+      var current = 0;
+      var slides = Array.from(document.querySelectorAll('.slide'));
+
+      function scale() {
+        var c = document.getElementById('slide-container');
+        var s = Math.min(window.innerWidth / SLIDE_W, (window.innerHeight - MARGIN_Y * 2) / SLIDE_H);
+        var x = (window.innerWidth - SLIDE_W * s) / 2;
+        var y = (window.innerHeight - SLIDE_H * s) / 2;
+        c.style.transform = 'translate(' + x + 'px,' + y + 'px) scale(' + s + ')';
+      }
+
+      function show(i) {
+        if (i < 0 || i >= slides.length) return;
+        slides.forEach(function (s) { s.classList.remove('active'); });
+        slides[i].querySelectorAll('.animate-in').forEach(function (el) {
+          el.style.animation = 'none'; el.offsetHeight; el.style.animation = '';
+        });
+        slides[i].classList.add('active');
+        current = i;
+        location.hash = '#' + (current + 1);
+        document.getElementById('progress-bar').style.width = ((current + 1) / slides.length * 100) + '%';
+        document.getElementById('slide-counter').textContent = (current + 1) + ' / ' + slides.length;
+      }
+
+      window.addEventListener('resize', scale);
+      scale();
+
+      document.addEventListener('keydown', function (e) {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+        switch (e.key) {
+          case 'ArrowRight': case 'ArrowDown': case ' ': case 'Enter': case 'PageDown':
+            e.preventDefault(); show(current + 1); break;
+          case 'ArrowLeft': case 'ArrowUp': case 'Backspace': case 'PageUp':
+            e.preventDefault(); show(current - 1); break;
+          case 'Home': e.preventDefault(); show(0); break;
+          case 'End': e.preventDefault(); show(slides.length - 1); break;
+          case 'f': case 'F':
+            e.preventDefault();
+            document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
+            break;
+          case 'p': case 'P': e.preventDefault(); window.print(); break;
+        }
+      });
+
+      window.addEventListener('hashchange', function () {
+        var h = parseInt(location.hash.replace('#', ''), 10);
+        if (h >= 1 && h <= slides.length) show(h - 1);
+      });
+
+      var hash = parseInt(location.hash.replace('#', ''), 10);
+      show((hash >= 1 && hash <= slides.length) ? hash - 1 : 0);
+    })();
+  </script>
+</body>
+</html>
