@@ -5,132 +5,75 @@ description: Create and live-edit presentation slide decks as multi-file HTML wi
 
 # Presentation Slide Builder
 
-Follow the steps below **in order**. Do not skip any step.
+This skill uses pre-built HTML slide templates with `{{PLACEHOLDER}}` markers.
+Your job is simple: copy the template, read source material, replace placeholders, start the server.
 
 ## Step 1: Gather info
 
 Ask the user (skip any already provided in their message):
 1. What is the topic?
 2. Who is the audience?
-3. How many slides?
+3. How many slides? (default: use all 12 templates)
 4. Any brand colors, fonts, or style reference?
 
-## Step 2: Read source material
-
-If the user references any files or URLs, read **every one** before proceeding. Save the key content — you will pass it to a subagent later.
-
-## Step 3: Plan slides
-
-Write out a numbered list of slides with their filename, type, and title. Example:
-
-```
-01-title.html        title    "Company Strategy 2026"
-02-summary.html      content  "Executive Summary"
-03-pillars.html      cards    "Three Pillars"
-04-metric.html       stat     "Key Metric"
-05-thankyou.html     end      "Thank You"
-```
-
-Show this to the user. Wait for confirmation or edits before proceeding.
-
-## Step 4: Scaffold the project
+## Step 2: Copy the template
 
 ```bash
 bash ${CLAUDE_SKILL_DIR}/scripts/scaffold.sh "<slug>"
 ```
 
-Where `<slug>` is a short kebab-case name (e.g., `ai-marketing`).
+Where `<slug>` is a short kebab-case name (e.g., `marketing-plan`). Save the `SCAFFOLD_DIR` path from the output.
 
-Save the `SCAFFOLD_DIR` path from the output (it will be an absolute path like `./presentation/YYYYMMDD-HHMM-slug`).
+This copies 12 pre-built slide templates into `${SCAFFOLD_DIR}/slides/`:
 
-**Do NOT start the server yet.**
+| File | Layout | Use for |
+|------|--------|---------|
+| `01-title.html` | Title slide | Opening — title, subtitle, author |
+| `02-overview.html` | Bullet list | Executive summary, overview |
+| `03-objectives.html` | Numbered list | Goals, objectives |
+| `04-profile.html` | Two columns | Audience profile, persona |
+| `05-strategy.html` | Two columns | Strategy, approach, channels |
+| `06-grid.html` | 2x2 card grid | Content pillars, features, categories |
+| `07-creative.html` | Image + text | Creative samples, demos, screenshots |
+| `08-timeline.html` | Two columns | Roadmap, phased plan |
+| `09-metrics.html` | Bullet list | KPIs, measurements, targets |
+| `10-model.html` | Two columns | Execution model, comparison |
+| `11-highlight.html` | Big number | Key stat, achievement |
+| `12-end.html` | Closing slide | Thank you, contact info |
 
-## Step 5: Write the instruction file for the subagent
+## Step 3: Read source material and replace placeholders
 
-Read the slide types reference:
+For each slide, read the relevant source file(s), then immediately replace the `{{PLACEHOLDER}}` text in that slide with real content. Work through slides one at a time — read the source, edit the slide, move to the next.
 
-```bash
-cat ${CLAUDE_SKILL_DIR}/instructions/slide-types.md
-```
+**Rules:**
+- Replace `{{PLACEHOLDER}}` text with real content. Keep it concise — each bullet under 15 words.
+- If a slide has more `<li>` items than you need, delete the extra `<li>` lines.
+- If you need to **duplicate a slide** (e.g., multiple creative samples), copy the file with a new number and add it to the manifest.
+- Do NOT change any HTML tags, CSS classes, or `<!-- slide-type -->` comments.
+- Do NOT add `<style>` or `<script>` to slide files.
 
-Then write a temporary instruction file at `${SCAFFOLD_DIR}/.task.md`. This file must contain **everything** the subagent needs — it will be the subagent's only input. Use this exact structure:
+## Step 4: Remove unused slides
 
-```markdown
-# Task: Write presentation slides
+If any template slides don't apply to this presentation:
 
-## Output directory
-Write all slide files to: <absolute path to ${SCAFFOLD_DIR}/slides/>
+1. Delete those slide files from `${SCAFFOLD_DIR}/slides/`
+2. Open `${SCAFFOLD_DIR}/index.html` and find the `<script id="slide-manifest">` block
+3. Remove the deleted filenames from the JSON array
 
-## Slide plan
-<paste your slide plan from Step 3 here — filename, type, title, and content notes for each slide>
-
-## Source material
-<paste the key content from Step 2 here — the subagent cannot read the original files>
-
-## Slide types reference
-<paste the full contents of slide-types.md here>
-```
-
-**Important:** The subagent cannot read any other files. Everything it needs must be in `.task.md`.
-
-## Step 6: Spawn the subagent
-
-Call `sessions_spawn` to delegate slide writing:
-
-```json
-{
-  "task": "Read the instruction file at <absolute path to ${SCAFFOLD_DIR}/.task.md> and follow it exactly. Write every slide file listed in the slide plan. Do not skip any slides. Do not create extra files. When done, list all files you wrote.",
-  "label": "write-slides",
-  "cleanup": "delete"
-}
-```
-
-**After spawning, wait for the subagent to complete.** Do NOT poll or call sessions_list. The completion event will arrive automatically.
-
-## Step 7: Verify and clean up
-
-Once the subagent completes:
-
-1. **Verify slides exist:** Run `ls ${SCAFFOLD_DIR}/slides/` and check that every file from your plan is present.
-
-2. **Delete template files:** The scaffold copied example templates. Delete every file that is NOT in your slide plan:
-   ```bash
-   rm ${SCAFFOLD_DIR}/slides/02-content.html ${SCAFFOLD_DIR}/slides/03-two-col.html ...
-   ```
-   If your plan reuses a template filename (e.g., `01-title.html`), the subagent already overwrote it — do not delete it.
-
-3. **Delete the instruction file:**
-   ```bash
-   rm ${SCAFFOLD_DIR}/.task.md
-   ```
-
-4. **Verify only your planned slides remain:** Run `ls ${SCAFFOLD_DIR}/slides/` again.
-
-## Step 8: Update the manifest
-
-Open `${SCAFFOLD_DIR}/index.html` and find the `<script id="slide-manifest">` block. Replace its contents with a JSON array listing **only your slide filenames, in order**:
-
+Example — if you deleted `11-highlight.html`:
 ```html
 <script id="slide-manifest" type="application/json">
-["01-title.html","02-summary.html","03-pillars.html","04-metric.html","05-thankyou.html"]
+["01-title.html","02-overview.html","03-objectives.html","04-profile.html","05-strategy.html","06-grid.html","07-creative.html","08-timeline.html","09-metrics.html","10-model.html","12-end.html"]
 </script>
 ```
 
-**Every slide file must be listed. Only listed files will show. Template files you deleted must NOT be listed.**
-
-## Step 9: Start the preview server
+## Step 5: Start the preview server
 
 ```bash
 bash ${CLAUDE_SKILL_DIR}/scripts/serve.sh "${SCAFFOLD_DIR}"
 ```
 
-The script outputs `SERVER_PID` and `SERVER_URL`. Tell the user:
-
-> Your presentation is ready! Open this link to view it:
->
-> http://localhost:PORT
->
-> Any changes will appear automatically. Let me know when you're done so I can stop the server.
+Tell the user the URL. Changes auto-reload.
 
 ## Later: Editing, restyling, PDF export
 
@@ -138,8 +81,4 @@ When the user asks to edit slides, restyle, or export PDF, read `${CLAUDE_SKILL_
 
 ## Stopping the server
 
-When the user is done, kill the server by its PID:
-
-```bash
-kill <SERVER_PID>
-```
+When done: `kill <SERVER_PID>`
