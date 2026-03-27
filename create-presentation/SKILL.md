@@ -8,11 +8,6 @@ description: Create and live-edit presentation slide decks as multi-file HTML wi
 This skill uses pre-built HTML slide templates with `{{PLACEHOLDER}}` markers.
 Your job is simple: copy the template, read source material, replace placeholders, start the server.
 
-**Skill directory:** This SKILL.md file is in the skill directory. The scripts and templates are next to it:
-- `scripts/scaffold.mjs` — copies templates to a new presentation folder
-- `scripts/serve.mjs` — starts a local preview server
-- `templates/` — the slide templates with placeholders
-
 ## Step 1: Gather info
 
 Ask the user (skip any already provided in their message):
@@ -23,15 +18,21 @@ Ask the user (skip any already provided in their message):
 
 ## Step 2: Copy the template
 
-Run from the skill directory (the directory containing this SKILL.md):
+Copy the `templates/` folder (next to this SKILL.md) to a new presentation folder:
 
 ```
-node scripts/scaffold.mjs "<slug>"
+presentation/<YYYYMMDD>-<slug>/
+├── index.html          (copied from templates/index.html)
+└── slides/             (copied from templates/slides/)
+    ├── 01-title.html
+    ├── 02-overview.html
+    ├── ...
+    └── 12-end.html
 ```
 
-Where `<slug>` is a short kebab-case name (e.g., `marketing-plan`). Save the `SCAFFOLD_DIR` path from the output.
+Where `<slug>` is a short kebab-case name (e.g., `marketing-plan`).
 
-This copies 12 pre-built slide templates into `${SCAFFOLD_DIR}/slides/`:
+The 12 template slides are:
 
 | File | Layout | Use for |
 |------|--------|---------|
@@ -63,8 +64,8 @@ For each slide, read the relevant source file(s), then immediately replace the `
 
 If any template slides don't apply to this presentation:
 
-1. Delete those slide files from `${SCAFFOLD_DIR}/slides/`
-2. Open `${SCAFFOLD_DIR}/index.html` and find the `<script id="slide-manifest">` block
+1. Delete those slide files from `slides/`
+2. Open `index.html` and find the `<script id="slide-manifest">` block
 3. Remove the deleted filenames from the JSON array
 
 Example — if you deleted `11-highlight.html`:
@@ -76,10 +77,10 @@ Example — if you deleted `11-highlight.html`:
 
 ## Step 5: Start the preview server
 
-Run from the skill directory:
+Run from the skill directory (the directory containing this SKILL.md):
 
 ```
-node scripts/serve.mjs "${SCAFFOLD_DIR}"
+node scripts/serve.mjs "<presentation-folder>"
 ```
 
 This starts a local HTTP server (no dependencies needed). Tell the user the URL from the output.
