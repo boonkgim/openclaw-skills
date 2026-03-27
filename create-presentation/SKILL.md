@@ -1,6 +1,6 @@
 ---
 name: create-presentation
-description: Create presentation slide decks as a single HTML file with keyboard navigation. Use when the user wants to create a presentation or slide deck.
+description: Create a marketing plan presentation as a single HTML file. Use when the user wants to create a presentation or slide deck.
 ---
 
 # Presentation Slide Builder
@@ -26,34 +26,34 @@ Copy `template.html` (next to this SKILL.md) to the user's working directory as:
 presentation/<YYYYMMDD>-<slug>.html
 ```
 
-Where `<slug>` is a short kebab-case name (e.g., `marketing-plan`).
-
 The template contains 12 slides:
 
-| Slide | Layout | Use for |
-|-------|--------|---------|
-| 1 | Title | Opening — title, subtitle, author |
-| 2 | Bullet list | Executive summary, overview |
-| 3 | Numbered list | Goals, objectives |
-| 4 | Two columns | Audience profile, persona |
-| 5 | Two columns | Strategy, approach, channels |
-| 6 | 2x2 card grid | Content pillars, features |
-| 7 | Image + text | Creative samples, screenshots |
-| 8 | Two columns | Roadmap, phased plan |
-| 9 | Bullet list | KPIs, measurements |
-| 10 | Two columns | Execution model, comparison |
-| 11 | Big number | Key stat, achievement |
-| 12 | Closing | Thank you, contact info |
+| Slide | Content |
+|-------|---------|
+| 1 | Title — presentation name, subtitle, author |
+| 2 | Company Overview — what the business does, products, differentiator |
+| 3 | Marketing Objectives — 3 numbered goals |
+| 4 | Target Audience — ICP profile + pain points (two columns) |
+| 5 | Marketing Strategy — growth engine + channels (two columns) |
+| 6 | Content Pillars — 4 pillars in 2x2 grid |
+| 7 | Content Pipeline — upcoming content items |
+| 8a | Creative Sample: AIDA — ad image + copy |
+| 8b | Creative Sample: BAB — ad image + copy |
+| 8c | Creative Sample: PAS — ad image + copy |
+| 9 | 90-Day Roadmap — 3 months phased plan (two columns) |
+| 10 | KPIs & Measurement — key metrics |
+| 11 | Execution Model — AI tasks vs human review (two columns) |
+| 12 | Closing — thank you, contact |
 
-## Step 3: Read source material and replace placeholders
+## Step 3: Replace placeholders
 
-For each slide, read the relevant source file(s), then replace the `{{PLACEHOLDER}}` text with real content.
+For each slide, find the relevant source material, then replace the `{{PLACEHOLDER}}` text with real content.
 
 **Rules:**
 - Keep each bullet under 15 words.
 - If a slide has more `<li>` items than needed, delete the extra `<li>` lines.
+- To duplicate a slide (e.g., one per ad creative), copy the entire `<section>...</section>` block.
 - To remove a slide, delete the entire `<section>...</section>` block.
-- To duplicate a slide (e.g., multiple creative samples), copy the `<section>` block.
 - Do NOT change HTML tags, CSS classes, or the `<style>`/`<script>` sections.
 
 ## Done

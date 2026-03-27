@@ -400,9 +400,9 @@
     <div class="slide-counter" id="slide-counter"></div>
 
     <!-- ============================================================
-         SLIDES — Edit the {{PLACEHOLDER}} text below.
+         SLIDES — Replace {{PLACEHOLDER}} text with real content.
          To remove a slide, delete the entire <section>...</section> block.
-         To add a slide, copy a <section> block and change its content.
+         To duplicate a slide, copy the <section> block.
          ============================================================ -->
 
     <!-- SLIDE 1: Title -->
@@ -412,178 +412,214 @@
       <p class="author animate-in">{{AUTHOR}} &middot; {{DATE}}</p>
     </section>
 
-    <!-- SLIDE 2: Overview / Executive Summary -->
+    <!-- SLIDE 2: Company Overview -->
     <section class="slide slide-content">
-      <h2 class="animate-in">{{HEADING}}</h2>
+      <h2 class="animate-in">Company Overview</h2>
       <ul>
-        <li class="animate-in">{{BULLET_1}}</li>
-        <li class="animate-in">{{BULLET_2}}</li>
-        <li class="animate-in">{{BULLET_3}}</li>
-        <li class="animate-in">{{BULLET_4}}</li>
+        <li class="animate-in">{{WHAT_THE_BUSINESS_DOES}}</li>
+        <li class="animate-in">{{KEY_PRODUCTS_OR_PLATFORMS}}</li>
+        <li class="animate-in">{{WHAT_MAKES_US_DIFFERENT}}</li>
+        <li class="animate-in">{{TARGET_MARKET}}</li>
       </ul>
     </section>
 
-    <!-- SLIDE 3: Objectives / Goals (numbered) -->
+    <!-- SLIDE 3: Marketing Objectives -->
     <section class="slide slide-content">
-      <h2 class="animate-in">{{HEADING}}</h2>
+      <h2 class="animate-in">Marketing Objectives</h2>
       <ol>
-        <li class="animate-in">{{ITEM_1}}</li>
-        <li class="animate-in">{{ITEM_2}}</li>
-        <li class="animate-in">{{ITEM_3}}</li>
+        <li class="animate-in">{{OBJECTIVE_1}}</li>
+        <li class="animate-in">{{OBJECTIVE_2}}</li>
+        <li class="animate-in">{{OBJECTIVE_3}}</li>
       </ol>
     </section>
 
-    <!-- SLIDE 4: Profile / Audience (two columns) -->
+    <!-- SLIDE 4: Target Audience / ICP -->
     <section class="slide slide-two-col">
-      <h2 class="animate-in">{{HEADING}}</h2>
+      <h2 class="animate-in">Target Audience</h2>
       <div class="columns animate-in">
         <div class="col">
-          <h3>{{LEFT_TITLE}}</h3>
+          <h3>ICP Profile</h3>
           <ul>
-            <li>{{LEFT_1}}</li>
-            <li>{{LEFT_2}}</li>
-            <li>{{LEFT_3}}</li>
+            <li>{{ICP_NAME_ROLE_LOCATION}}</li>
+            <li>{{ICP_GOALS}}</li>
+            <li>{{ICP_VALUES}}</li>
           </ul>
         </div>
         <div class="col">
-          <h3>{{RIGHT_TITLE}}</h3>
+          <h3>Pain Points</h3>
           <ul>
-            <li>{{RIGHT_1}}</li>
-            <li>{{RIGHT_2}}</li>
-            <li>{{RIGHT_3}}</li>
+            <li>{{PAIN_POINT_1}}</li>
+            <li>{{PAIN_POINT_2}}</li>
+            <li>{{PAIN_POINT_3}}</li>
           </ul>
         </div>
       </div>
     </section>
 
-    <!-- SLIDE 5: Strategy / Approach (two columns) -->
+    <!-- SLIDE 5: Marketing Strategy -->
     <section class="slide slide-two-col">
-      <h2 class="animate-in">{{HEADING}}</h2>
+      <h2 class="animate-in">Marketing Strategy</h2>
       <div class="columns animate-in">
         <div class="col">
-          <h3>{{LEFT_TITLE}}</h3>
-          <p>{{LEFT_DESC}}</p>
+          <h3>Growth Engine</h3>
+          <p>{{GROWTH_ENGINE_DESC}}</p>
           <ul>
-            <li>{{LEFT_1}}</li>
-            <li>{{LEFT_2}}</li>
+            <li>{{APPROACH}}</li>
+            <li>{{FUNNEL}}</li>
           </ul>
         </div>
         <div class="col">
-          <h3>{{RIGHT_TITLE}}</h3>
-          <p>{{RIGHT_DESC}}</p>
+          <h3>Channels</h3>
+          <p>{{CHANNELS_DESC}}</p>
           <ul>
-            <li>{{RIGHT_1}}</li>
-            <li>{{RIGHT_2}}</li>
+            <li>{{PRIMARY_CHANNEL}}</li>
+            <li>{{SECONDARY_CHANNEL}}</li>
           </ul>
         </div>
       </div>
     </section>
 
-    <!-- SLIDE 6: Grid / Categories (2x2 cards) -->
+    <!-- SLIDE 6: Content Pillars -->
     <section class="slide slide-cards">
-      <h2 class="animate-in">{{HEADING}}</h2>
+      <h2 class="animate-in">Content Pillars</h2>
       <div class="card-grid animate-in">
         <div class="card">
-          <h3>{{CARD_1_TITLE}}</h3>
-          <p>{{CARD_1_DESC}}</p>
+          <h3>{{PILLAR_1_TITLE}}</h3>
+          <p>{{PILLAR_1_DESC}}</p>
         </div>
         <div class="card">
-          <h3>{{CARD_2_TITLE}}</h3>
-          <p>{{CARD_2_DESC}}</p>
+          <h3>{{PILLAR_2_TITLE}}</h3>
+          <p>{{PILLAR_2_DESC}}</p>
         </div>
         <div class="card">
-          <h3>{{CARD_3_TITLE}}</h3>
-          <p>{{CARD_3_DESC}}</p>
+          <h3>{{PILLAR_3_TITLE}}</h3>
+          <p>{{PILLAR_3_DESC}}</p>
         </div>
         <div class="card">
-          <h3>{{CARD_4_TITLE}}</h3>
-          <p>{{CARD_4_DESC}}</p>
+          <h3>{{PILLAR_4_TITLE}}</h3>
+          <p>{{PILLAR_4_DESC}}</p>
         </div>
       </div>
     </section>
 
-    <!-- SLIDE 7: Creative / Image + Text (two columns) -->
-    <section class="slide slide-two-col">
-      <h2 class="animate-in">{{HEADING}}</h2>
-      <div class="columns animate-in">
-        <div class="col">
-          <div class="image-container">
-            <img src="{{IMAGE_PATH}}" alt="{{IMAGE_ALT}}">
-          </div>
-        </div>
-        <div class="col">
-          <h3>{{RIGHT_TITLE}}</h3>
-          <p>{{RIGHT_DESC}}</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- SLIDE 8: Timeline / Roadmap (two columns) -->
-    <section class="slide slide-two-col">
-      <h2 class="animate-in">{{HEADING}}</h2>
-      <div class="columns animate-in">
-        <div class="col">
-          <h3>{{PHASE_1_TITLE}}</h3>
-          <ul>
-            <li>{{PHASE_1_ACTION_1}}</li>
-            <li>{{PHASE_1_ACTION_2}}</li>
-          </ul>
-          <h3>{{PHASE_2_TITLE}}</h3>
-          <ul>
-            <li>{{PHASE_2_ACTION_1}}</li>
-            <li>{{PHASE_2_ACTION_2}}</li>
-          </ul>
-        </div>
-        <div class="col">
-          <h3>{{PHASE_3_TITLE}}</h3>
-          <ul>
-            <li>{{PHASE_3_ACTION_1}}</li>
-            <li>{{PHASE_3_ACTION_2}}</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- SLIDE 9: Metrics / KPIs -->
+    <!-- SLIDE 7: Content Pipeline -->
     <section class="slide slide-content">
-      <h2 class="animate-in">{{HEADING}}</h2>
+      <h2 class="animate-in">Content Pipeline</h2>
       <ul>
-        <li class="animate-in">{{METRIC_1}}</li>
-        <li class="animate-in">{{METRIC_2}}</li>
-        <li class="animate-in">{{METRIC_3}}</li>
-        <li class="animate-in">{{METRIC_4}}</li>
+        <li class="animate-in">{{CONTENT_ITEM_1}}</li>
+        <li class="animate-in">{{CONTENT_ITEM_2}}</li>
+        <li class="animate-in">{{CONTENT_ITEM_3}}</li>
+        <li class="animate-in">{{CONTENT_ITEM_4}}</li>
+        <li class="animate-in">{{CONTENT_ITEM_5}}</li>
       </ul>
     </section>
 
-    <!-- SLIDE 10: Model / Comparison (two columns) -->
+    <!-- SLIDE 8a: Creative Sample — AIDA -->
     <section class="slide slide-two-col">
-      <h2 class="animate-in">{{HEADING}}</h2>
+      <h2 class="animate-in">Creative Sample: AIDA</h2>
       <div class="columns animate-in">
         <div class="col">
-          <h3>{{LEFT_TITLE}}</h3>
+          <div class="image-container">
+            <img src="{{AIDA_IMAGE_PATH}}" alt="AIDA ad">
+          </div>
+        </div>
+        <div class="col">
+          <h3>{{AIDA_HOOK}}</h3>
+          <p>{{AIDA_AD_COPY}}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 8b: Creative Sample — BAB -->
+    <section class="slide slide-two-col">
+      <h2 class="animate-in">Creative Sample: BAB</h2>
+      <div class="columns animate-in">
+        <div class="col">
+          <div class="image-container">
+            <img src="{{BAB_IMAGE_PATH}}" alt="BAB ad">
+          </div>
+        </div>
+        <div class="col">
+          <h3>{{BAB_HOOK}}</h3>
+          <p>{{BAB_AD_COPY}}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 8c: Creative Sample — PAS -->
+    <section class="slide slide-two-col">
+      <h2 class="animate-in">Creative Sample: PAS</h2>
+      <div class="columns animate-in">
+        <div class="col">
+          <div class="image-container">
+            <img src="{{PAS_IMAGE_PATH}}" alt="PAS ad">
+          </div>
+        </div>
+        <div class="col">
+          <h3>{{PAS_HOOK}}</h3>
+          <p>{{PAS_AD_COPY}}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 9: 90-Day Roadmap -->
+    <section class="slide slide-two-col">
+      <h2 class="animate-in">90-Day Roadmap</h2>
+      <div class="columns animate-in">
+        <div class="col">
+          <h3>{{MONTH_1_TITLE}}</h3>
           <ul>
-            <li>{{LEFT_1}}</li>
-            <li>{{LEFT_2}}</li>
-            <li>{{LEFT_3}}</li>
+            <li>{{MONTH_1_ACTION_1}}</li>
+            <li>{{MONTH_1_ACTION_2}}</li>
+          </ul>
+          <h3>{{MONTH_2_TITLE}}</h3>
+          <ul>
+            <li>{{MONTH_2_ACTION_1}}</li>
+            <li>{{MONTH_2_ACTION_2}}</li>
           </ul>
         </div>
         <div class="col">
-          <h3>{{RIGHT_TITLE}}</h3>
+          <h3>{{MONTH_3_TITLE}}</h3>
           <ul>
-            <li>{{RIGHT_1}}</li>
-            <li>{{RIGHT_2}}</li>
-            <li>{{RIGHT_3}}</li>
+            <li>{{MONTH_3_ACTION_1}}</li>
+            <li>{{MONTH_3_ACTION_2}}</li>
           </ul>
         </div>
       </div>
     </section>
 
-    <!-- SLIDE 11: Highlight / Big Number -->
-    <section class="slide slide-stat">
-      <h2 class="animate-in">{{HEADING}}</h2>
-      <div class="stat-number animate-in">{{NUMBER}}</div>
-      <div class="stat-label animate-in">{{LABEL}}</div>
-      <p class="stat-description animate-in">{{DESCRIPTION}}</p>
+    <!-- SLIDE 10: KPIs & Measurement -->
+    <section class="slide slide-content">
+      <h2 class="animate-in">KPIs &amp; Measurement</h2>
+      <ul>
+        <li class="animate-in">{{KPI_1}}</li>
+        <li class="animate-in">{{KPI_2}}</li>
+        <li class="animate-in">{{KPI_3}}</li>
+        <li class="animate-in">{{KPI_4}}</li>
+      </ul>
+    </section>
+
+    <!-- SLIDE 11: Execution Model -->
+    <section class="slide slide-two-col">
+      <h2 class="animate-in">Execution Model</h2>
+      <div class="columns animate-in">
+        <div class="col">
+          <h3>AI Tasks</h3>
+          <ul>
+            <li>{{AI_TASK_1}}</li>
+            <li>{{AI_TASK_2}}</li>
+            <li>{{AI_TASK_3}}</li>
+          </ul>
+        </div>
+        <div class="col">
+          <h3>Human Review</h3>
+          <ul>
+            <li>{{HUMAN_TASK_1}}</li>
+            <li>{{HUMAN_TASK_2}}</li>
+            <li>{{HUMAN_TASK_3}}</li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <!-- SLIDE 12: Closing -->
