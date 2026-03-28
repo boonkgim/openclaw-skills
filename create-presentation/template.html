@@ -215,6 +215,64 @@
     }
 
     /* ================================================================
+       DEFINITION LISTS (label + description)
+       ================================================================ */
+    dl {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    dl div {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    dt {
+      font-size: var(--text-lg);
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    dd {
+      font-size: var(--text-base);
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* ================================================================
+       TABLES
+       ================================================================ */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      text-align: left;
+      padding: var(--space-sm) var(--space-md);
+      font-size: var(--text-base);
+      border-bottom: var(--border);
+    }
+
+    th {
+      color: var(--accent);
+      font-weight: 700;
+      font-size: var(--text-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    td {
+      color: var(--text-secondary);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* ================================================================
        IMAGES
        ================================================================ */
     .slide img {
@@ -254,8 +312,13 @@
     .card-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
+      grid-auto-rows: 1fr;
       gap: var(--space-md);
       width: 100%;
+    }
+
+    .card-grid.cols-3 {
+      grid-template-columns: repeat(3, 1fr);
     }
 
     /* ================================================================
@@ -413,24 +476,24 @@
     </section>
 
     <!-- SLIDE 2: Company Overview -->
-    <section class="slide slide-content">
+    <section class="slide slide-cards">
       <h2 class="animate-in">Company Overview</h2>
-      <ul>
-        <li class="animate-in">{{WHAT_THE_BUSINESS_DOES}}</li>
-        <li class="animate-in">{{KEY_PRODUCTS_OR_PLATFORMS}}</li>
-        <li class="animate-in">{{WHAT_MAKES_US_DIFFERENT}}</li>
-        <li class="animate-in">{{TARGET_MARKET}}</li>
-      </ul>
+      <div class="card-grid animate-in">
+        <div class="card"><h3>What We Do</h3><p>{{WHAT_THE_BUSINESS_DOES}}</p></div>
+        <div class="card"><h3>Key Products</h3><p>{{KEY_PRODUCTS_OR_PLATFORMS}}</p></div>
+        <div class="card"><h3>Our Edge</h3><p>{{WHAT_MAKES_US_DIFFERENT}}</p></div>
+        <div class="card"><h3>Target Market</h3><p>{{TARGET_MARKET}}</p></div>
+      </div>
     </section>
 
     <!-- SLIDE 3: Marketing Objectives -->
-    <section class="slide slide-content">
+    <section class="slide slide-cards">
       <h2 class="animate-in">Marketing Objectives</h2>
-      <ol>
-        <li class="animate-in">{{OBJECTIVE_1}}</li>
-        <li class="animate-in">{{OBJECTIVE_2}}</li>
-        <li class="animate-in">{{OBJECTIVE_3}}</li>
-      </ol>
+      <div class="card-grid cols-3 animate-in">
+        <div class="card"><h3>Objective 1</h3><p>{{OBJECTIVE_1}}</p></div>
+        <div class="card"><h3>Objective 2</h3><p>{{OBJECTIVE_2}}</p></div>
+        <div class="card"><h3>Objective 3</h3><p>{{OBJECTIVE_3}}</p></div>
+      </div>
     </section>
 
     <!-- SLIDE 4: Target Audience / ICP -->
@@ -439,19 +502,19 @@
       <div class="columns animate-in">
         <div class="col">
           <h3>ICP Profile</h3>
-          <ul>
-            <li>{{ICP_NAME_ROLE_LOCATION}}</li>
-            <li>{{ICP_GOALS}}</li>
-            <li>{{ICP_VALUES}}</li>
-          </ul>
+          <dl>
+            <div><dt>Who</dt><dd>{{ICP_NAME_ROLE_LOCATION}}</dd></div>
+            <div><dt>Goals</dt><dd>{{ICP_GOALS}}</dd></div>
+            <div><dt>Values</dt><dd>{{ICP_VALUES}}</dd></div>
+          </dl>
         </div>
         <div class="col">
           <h3>Pain Points</h3>
-          <ul>
-            <li>{{PAIN_POINT_1}}</li>
-            <li>{{PAIN_POINT_2}}</li>
-            <li>{{PAIN_POINT_3}}</li>
-          </ul>
+          <dl>
+            <div><dt>{{PAIN_LABEL_1}}</dt><dd>{{PAIN_POINT_1}}</dd></div>
+            <div><dt>{{PAIN_LABEL_2}}</dt><dd>{{PAIN_POINT_2}}</dd></div>
+            <div><dt>{{PAIN_LABEL_3}}</dt><dd>{{PAIN_POINT_3}}</dd></div>
+          </dl>
         </div>
       </div>
     </section>
@@ -462,19 +525,19 @@
       <div class="columns animate-in">
         <div class="col">
           <h3>Growth Engine</h3>
-          <p>{{GROWTH_ENGINE_DESC}}</p>
-          <ul>
-            <li>{{APPROACH}}</li>
-            <li>{{FUNNEL}}</li>
-          </ul>
+          <dl>
+            <div><dt>Model</dt><dd>{{GROWTH_ENGINE_DESC}}</dd></div>
+            <div><dt>Approach</dt><dd>{{APPROACH}}</dd></div>
+            <div><dt>Funnel</dt><dd>{{FUNNEL}}</dd></div>
+          </dl>
         </div>
         <div class="col">
           <h3>Channels</h3>
-          <p>{{CHANNELS_DESC}}</p>
-          <ul>
-            <li>{{PRIMARY_CHANNEL}}</li>
-            <li>{{SECONDARY_CHANNEL}}</li>
-          </ul>
+          <dl>
+            <div><dt>Strategy</dt><dd>{{CHANNELS_DESC}}</dd></div>
+            <div><dt>Primary</dt><dd>{{PRIMARY_CHANNEL}}</dd></div>
+            <div><dt>Secondary</dt><dd>{{SECONDARY_CHANNEL}}</dd></div>
+          </dl>
         </div>
       </div>
     </section>
@@ -505,13 +568,18 @@
     <!-- SLIDE 7: Content Pipeline -->
     <section class="slide slide-content">
       <h2 class="animate-in">Content Pipeline</h2>
-      <ul>
-        <li class="animate-in">{{CONTENT_ITEM_1}}</li>
-        <li class="animate-in">{{CONTENT_ITEM_2}}</li>
-        <li class="animate-in">{{CONTENT_ITEM_3}}</li>
-        <li class="animate-in">{{CONTENT_ITEM_4}}</li>
-        <li class="animate-in">{{CONTENT_ITEM_5}}</li>
-      </ul>
+      <table class="animate-in">
+        <thead>
+          <tr><th>Pillar</th><th>Title</th><th>Platform</th><th>Format</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>{{ROW_1_PILLAR}}</td><td>{{ROW_1_TITLE}}</td><td>{{ROW_1_PLATFORM}}</td><td>{{ROW_1_FORMAT}}</td></tr>
+          <tr><td>{{ROW_2_PILLAR}}</td><td>{{ROW_2_TITLE}}</td><td>{{ROW_2_PLATFORM}}</td><td>{{ROW_2_FORMAT}}</td></tr>
+          <tr><td>{{ROW_3_PILLAR}}</td><td>{{ROW_3_TITLE}}</td><td>{{ROW_3_PLATFORM}}</td><td>{{ROW_3_FORMAT}}</td></tr>
+          <tr><td>{{ROW_4_PILLAR}}</td><td>{{ROW_4_TITLE}}</td><td>{{ROW_4_PLATFORM}}</td><td>{{ROW_4_FORMAT}}</td></tr>
+          <tr><td>{{ROW_5_PILLAR}}</td><td>{{ROW_5_TITLE}}</td><td>{{ROW_5_PLATFORM}}</td><td>{{ROW_5_FORMAT}}</td></tr>
+        </tbody>
+      </table>
     </section>
 
     <!-- SLIDE 8a: Creative Sample — AIDA -->
@@ -589,14 +657,14 @@
     </section>
 
     <!-- SLIDE 10: KPIs & Measurement -->
-    <section class="slide slide-content">
+    <section class="slide slide-cards">
       <h2 class="animate-in">KPIs &amp; Measurement</h2>
-      <ul>
-        <li class="animate-in">{{KPI_1}}</li>
-        <li class="animate-in">{{KPI_2}}</li>
-        <li class="animate-in">{{KPI_3}}</li>
-        <li class="animate-in">{{KPI_4}}</li>
-      </ul>
+      <div class="card-grid animate-in">
+        <div class="card"><h3>{{KPI_1_NUMBER}}</h3><p>{{KPI_1_LABEL}}</p></div>
+        <div class="card"><h3>{{KPI_2_NUMBER}}</h3><p>{{KPI_2_LABEL}}</p></div>
+        <div class="card"><h3>{{KPI_3_NUMBER}}</h3><p>{{KPI_3_LABEL}}</p></div>
+        <div class="card"><h3>{{KPI_4_NUMBER}}</h3><p>{{KPI_4_LABEL}}</p></div>
+      </div>
     </section>
 
     <!-- SLIDE 11: Execution Model -->
