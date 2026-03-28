@@ -95,12 +95,17 @@
       flex-direction: column;
       justify-content: center;
       background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-      opacity: 0;
-      transition: opacity var(--transition);
     }
 
     .slide.active {
       display: flex;
+    }
+
+    .slide > * {
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .slide.active > * {
       opacity: 1;
     }
 
@@ -420,7 +425,7 @@
     /* ================================================================
        ANIMATIONS
        ================================================================ */
-    .slide.active { animation: fadeIn 0.4s ease; }
+    .slide.active > * { animation: fadeIn 0.4s ease; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
     /* ================================================================
